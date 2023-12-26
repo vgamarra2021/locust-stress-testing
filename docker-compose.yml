@@ -29,19 +29,19 @@ services:
       - mysql-data:/var/lib/mysql
 
   #LOCUST
-  # master:
-  #   image: locustio/locust
-  #   ports:
-  #    - "8089:8089"
-  #   volumes:
-  #     - ./locust-test:/mnt/locust
-  #   command: -f /mnt/locust/locustfile.py --master -H http://master:8089
+  master:
+    image: locustio/locust
+    ports:
+     - "8089:8089"
+    volumes:
+      - ./locust-test:/mnt/locust
+    command: -f /mnt/locust/locustfile.py --master -H http://master:8089 --class-picker
   
-  # worker:
-  #   image: locustio/locust
-  #   volumes:
-  #     - ./locust-test:/mnt/locust
-  #   command: -f /mnt/locust/locustfile.py --worker --master-host master
+  worker:
+    image: locustio/locust
+    volumes:
+      - ./locust-test:/mnt/locust
+    command: -f /mnt/locust/locustfile.py --worker --master-host master
 
 
 volumes:
