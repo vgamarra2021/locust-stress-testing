@@ -1,21 +1,5 @@
 version: '3.8'
 services:
-  #BACKEND
-  app-backend:
-    build: ./app-backend
-    ports:
-      - "3000:3000"
-    environment:
-      - DATABASE_HOST=mysql
-      - DATABASE_USER=root
-      - DATABASE_PASSWORD=blog_password
-      - DATABASE_NAME=blog
-    depends_on:
-      - mysql
-    mem_limit: 512m
-    cpus: 1.0
-    restart: always
-
   #DATABASE
   mysql:
     image: mysql:8.0
@@ -27,21 +11,33 @@ services:
       - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
+      
+  #BACKEND
+  app-backend:
+    build: ./app-backend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mysql
+    mem_limit: 512m
+    cpus: 1.0
+    restart: always
+
 
   #LOCUST
-  master:
-    image: locustio/locust
-    ports:
-     - "8089:8089"
-    volumes:
-      - ./locust-test:/mnt/locust
-    command: -f /mnt/locust/locustfile.py --master -H http://master:8089 --class-picker
+  # master:
+  #   image: locustio/locust
+  #   ports:
+  #    - "8089:8089"
+  #   volumes:
+  #     - ./locust-test:/mnt/locust
+  #   command: -f /mnt/locust/locustfile.py --master -H http://master:8089 --class-picker
   
-  worker:
-    image: locustio/locust
-    volumes:
-      - ./locust-test:/mnt/locust
-    command: -f /mnt/locust/locustfile.py --worker --master-host master
+  # worker:
+  #   image: locustio/locust
+  #   volumes:
+  #     - ./locust-test:/mnt/locust
+  #   command: -f /mnt/locust/locustfile.py --worker --master-host master
 
 
 volumes:
